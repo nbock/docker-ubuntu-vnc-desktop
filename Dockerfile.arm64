@@ -121,6 +121,60 @@ RUN ln -sf /usr/local/lib/web/frontend/static/websockify" "/usr/local/lib/web/fr
 RUN ln -sf /usr/local/lib/web/frontend/static/websockify /usr/local/lib/web/frontend/static/novnc/utils/websockify && \
 	chmod +x /usr/local/lib/web/frontend/static/websockify/run
 
+RUN apt-get update
+RUN apt-get install -y gnuradio-dev protobuf-compiler 
+RUN apt-get install -y gr-osmosdr gnuradio 
+RUN apt-get install -y libvolk2-dev libvolk2-bin
+RUN apt-get install -y libprotobuf-c-dev libprotobuf-dev 
+RUN apt-get install -y libopus0 libopus-dev 
+RUN apt-get install -y libspeexdsp1 libspeexdsp-dev 
+RUN apt-get install -y libpulse0 libpulse-dev 
+RUN apt-get install -y liblog4cpp5v5 libcodec2-0.9 
+RUN apt-get install -y libcodec2-dev libasound2 
+RUN apt-get install -y libasound2-dev libjpeg-turbo8 
+RUN apt-get install -y libjpeg-turbo8-dev libconfig++9v5 
+RUN apt-get install -y libconfig++-dev qt5-qmake 
+RUN apt-get install -y qtbase5-dev libqt5core5a 
+RUN apt-get install -y libqt5gui5 libqt5network5 
+RUN apt-get install -y libqt5sql5 qtmultimedia5-dev 
+RUN apt-get install -y libqt5multimediawidgets5 libqt5multimedia5-plugins 
+RUN apt-get install -y libqt5multimedia5 libftdi-dev 
+RUN apt-get install -y libftdi1 libsndfile1-dev 
+RUN apt-get install -y libsndfile1 qtgstreamer-plugins-qt5 
+RUN apt-get install -y libgstreamer-plugins-bad1.0-0 
+RUN apt-get install -y liblimesuite-dev liblimesuite20.01-1 
+RUN apt-get install -y libzmq3-dev libzmq5 
+RUN apt-get install -y libsoapysdr-dev libsoapysdr0.7
+
+RUN apt-get install -y libglib2.0-dev libgtk-3-dev libgtkdatabox-dev libmatio-dev libfftw3-dev libxml2 libxml2-dev bison flex libavahi-common-dev libavahi-client-dev libcurl4-openssl-dev libjansson-dev cmake libaio-dev libserialport-dev
+
+# Build libiio, UGH
+RUN apt-get install -y libxml2 libxml2-dev bison flex libcdk5-dev cmake
+RUN apt-get install -y libaio-dev libusb-1.0-0-dev libserialport-dev libxml2-dev libavahi-client-dev doxygen graphviz
+RUN apt-get install -y git
+RUN apt-get install -y build-essential
+RUN apt-get install -y cmake
+RUN apt install -y libprotobuf-dev protobuf-compiler
+
+WORKDIR /root
+RUN git clone https://github.com/analogdevicesinc/libiio.git
+WORKDIR libiio
+RUN git checkout v0.25
+RUN mkdir -p build
+WORKDIR build
+RUN cmake ../
+RUN make
+RUN sudo make install
+RUN PATH=/usr/lib/x86_64-linux-gnu/:$PATH
+WORKDIR /root
+RUN git clone https://github.com/analogdevicesinc/iio-oscilloscope.git
+WORKDIR iio-oscilloscope
+RUN git checkout origin/2021_R2
+RUN mkdir -p build
+WORKDIR build
+RUN cmake ../ && make
+RUN make install
+
 EXPOSE 80
 WORKDIR /root
 ENV HOME=/home/ubuntu \
